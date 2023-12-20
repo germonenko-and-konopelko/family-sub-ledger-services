@@ -1,0 +1,20 @@
+﻿version: '3.9'
+
+name: fsl
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: postgres
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_USER: ${FB_POSTGRES_USER}
+      POSTGRES_PASSWORD: ${FB_POSTGRES_PASSWORD}
+      POSTGRES_DB: fsl
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
+    name: fsl_postgres_data

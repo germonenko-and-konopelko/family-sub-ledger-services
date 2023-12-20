@@ -10,6 +10,8 @@ public class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbContext(
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.HasDefaultSchema("core");
+
         modelBuilder.ApplyConfiguration(new UserEntityTypeConfiguration());
     }
 }

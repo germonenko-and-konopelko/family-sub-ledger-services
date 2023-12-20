@@ -1,6 +1,6 @@
 namespace GK.FSL.Api.Modules.Users.Models;
 
-public class UserModel
+public record UserModel
 {
     public string FirstName { get; set; } = string.Empty;
 
