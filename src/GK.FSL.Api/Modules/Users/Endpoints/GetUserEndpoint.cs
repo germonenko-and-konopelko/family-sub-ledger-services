@@ -12,6 +12,7 @@ public class GetUserEndpoint : EndpointWithoutRequest<UserModel>
 
     public override Task HandleAsync(CancellationToken ct)
     {
+        var userIdParam = Route<string>("id");
         throw new NotImplementedException();
     }
 }

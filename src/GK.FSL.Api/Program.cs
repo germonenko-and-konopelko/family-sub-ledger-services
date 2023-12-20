@@ -1,3 +1,5 @@
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using FastEndpoints;
 using GK.FSL.Api.Services;
 using GK.FSL.Api.Services.Contracts;
@@ -23,10 +25,19 @@ builder.Services.AddDbContext<CoreDbContext>(options =>
 builder.Services.AddSingleton<IIdEncoder, SqidsIdEncoder>();
 builder.Services.AddSingleton<SqidsEncoder<long>>(_ =>
 {
-    var options = new SqidsOptions
+    var options = new SqidsOptions();
+    var alphabet = builder.Configuration.GetValue<string>("Security:Sqids:Alphabet");
+    if (!string.IsNullOrEmpty(alphabet))
     {
+        options.Alphabet = alphabet;
+    }
 
-    };
+    var minLength = builder.Configuration.GetValue<int>("Security:Sqids:MinLength");
+    if (minLength >= 0)
+    {
+        options.MinLength = minLength;
+    }
+
     return new SqidsEncoder<long>(options);
 });
 
@@ -35,5 +46,8 @@ var app = builder.Build();
 app.UseFastEndpoints(options =>
 {
     options.Versioning.Prefix = "v";
+    options.Serializer.Options.IncludeFields = true;
+    options.Serializer.Options.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase));
 });
+
 app.Run();

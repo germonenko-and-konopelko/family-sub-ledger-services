@@ -3,6 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "solution items", "solution items", "{EF55EAE3-7D11-4D32-8388-91AB2FAAD9EE}"
 	ProjectSection(SolutionItems) = preProject
 		README.md = README.md
+		docker-compose.yaml = docker-compose.yaml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{020DF78C-D102-46CB-8D12-79E6C0573C42}"

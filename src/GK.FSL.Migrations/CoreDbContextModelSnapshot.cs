@@ -17,6 +17,7 @@ namespace GK.FSL.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
+                .HasDefaultSchema("core")
                 .HasAnnotation("ProductVersion", "8.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
@@ -56,7 +57,7 @@ namespace GK.FSL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", "core");
                 });
 
             modelBuilder.Entity("GK.FSL.Core.Models.User", b =>
@@ -80,7 +81,7 @@ namespace GK.FSL.Migrations
 
                             b1.HasKey("UserId");
 
-                            b1.ToTable("Users");
+                            b1.ToTable("Users", "core");
 
                             b1.WithOwner()
                                 .HasForeignKey("UserId");

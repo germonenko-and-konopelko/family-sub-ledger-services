@@ -11,8 +11,12 @@ namespace GK.FSL.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.EnsureSchema(
+                name: "core");
+
             migrationBuilder.CreateTable(
                 name: "Users",
+                schema: "core",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
@@ -36,7 +40,8 @@ namespace GK.FSL.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Users");
+                name: "Users",
+                schema: "core");
         }
     }
 }
