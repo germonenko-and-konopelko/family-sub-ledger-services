@@ -3,7 +3,7 @@ using GK.FSL.Core.Models.Contracts;
 
 namespace GK.FSL.Core.Models;
 
-public class Session : BaseModel<Guid>
+public class Session : BaseModel<long>
 {
     [Required, StringLength(200)]
     public string RefreshToken { get; set; } = string.Empty;

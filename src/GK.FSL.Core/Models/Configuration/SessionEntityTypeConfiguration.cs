@@ -7,6 +7,6 @@ public class SessionEntityTypeConfiguration : IEntityTypeConfiguration<Session>
 {
     public void Configure(EntityTypeBuilder<Session> builder)
     {
-        throw new NotImplementedException();
+        builder.HasIndex(s => s.RefreshToken).IsUnique();
     }
 }

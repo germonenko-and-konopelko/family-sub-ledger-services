@@ -46,7 +46,6 @@ var app = builder.Build();
 app.UseFastEndpoints(options =>
 {
     options.Versioning.Prefix = "v";
-    options.Serializer.Options.IncludeFields = true;
     options.Serializer.Options.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase));
 });
 
