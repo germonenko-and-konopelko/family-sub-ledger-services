@@ -28,8 +28,10 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Common\GK.FSL.Common.Validation\GK.FSL.Common.Validation.csproj" />
       <ProjectReference Include="..\GK.FSL.Core\GK.FSL.Core.csproj" />
       <ProjectReference Include="..\GK.FSL.Migrations\GK.FSL.Migrations.csproj" />
+      <ProjectReference Include="..\GK.FSL.Registration\GK.FSL.Registration.csproj" />
     </ItemGroup>
 
 </Project>

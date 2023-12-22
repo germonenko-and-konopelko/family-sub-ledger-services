@@ -29,7 +29,7 @@ public class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbContext(
         return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
     }
 
-    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
+    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new())
     {
         SetCreatedAndUpdatedDate();
         return base.SaveChangesAsync(cancellationToken);
@@ -39,12 +39,13 @@ public class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbContext(
     {
         modelBuilder.HasDefaultSchema("core");
 
+        modelBuilder.ApplyConfiguration(new SessionEntityTypeConfiguration());
         modelBuilder.ApplyConfiguration(new UserEntityTypeConfiguration());
     }
 
     private void SetCreatedAndUpdatedDate()
     {
-        var now = DateTimeOffset.Now;
+        var now = DateTimeOffset.UtcNow;
         SetCreatedDate(now);
         SetUpdatedDate(now);
     }

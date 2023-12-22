@@ -34,6 +34,13 @@ namespace GK.FSL.Migrations
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_EmailAddress",
+                schema: "core",
+                table: "Users",
+                column: "EmailAddress",
+                unique: true);
         }
 
         /// <inheritdoc />

@@ -3,11 +3,23 @@ using System.Text.Json.Serialization;
 using FastEndpoints;
 using GK.FSL.Api.Services;
 using GK.FSL.Api.Services.Contracts;
+using GK.FSL.Common.Cryptography;
+using GK.FSL.Common.Validation;
+using GK.FSL.Common.Validation.Contracts;
 using GK.FSL.Core;
+using GK.FSL.Registration.Contracts;
+using GK.FSL.Registration.Models;
+using GK.FSL.Registration.Services;
+using GK.FSL.Registration.Validators;
 using Microsoft.EntityFrameworkCore;
 using Sqids;
 
 var builder = WebApplication.CreateSlimBuilder(args);
+
+builder.Services.AddOptions<HashingOptions>()
+    .Bind(builder.Configuration.GetSection("Security:Hashing"))
+    .ValidateDataAnnotations()
+    .ValidateOnStart();
 
 builder.Services.AddFastEndpoints();
 builder.Services.AddDbContext<CoreDbContext>(options =>
@@ -22,6 +34,9 @@ builder.Services.AddDbContext<CoreDbContext>(options =>
     options.EnableDetailedErrors(builder.Environment.IsDevelopment());
 });
 
+
+builder.Services.AddScoped<IUserRegistrationService, UserRegistrationService>();
+builder.Services.AddSingleton<IHasher, Pbkdf2Hasher>();
 builder.Services.AddSingleton<IIdEncoder, SqidsIdEncoder>();
 builder.Services.AddSingleton<SqidsEncoder<long>>(_ =>
 {
@@ -40,6 +55,9 @@ builder.Services.AddSingleton<SqidsEncoder<long>>(_ =>
 
     return new SqidsEncoder<long>(options);
 });
+
+builder.Services.AddScoped(typeof(IValidationRunner<>), typeof(ValidationRunner<>));
+builder.Services.AddScoped<IAsyncValidator<RegisterUserDto>, UserEmailInUseValidator>();
 
 var app = builder.Build();
 

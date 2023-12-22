@@ -7,6 +7,8 @@ public class UserEntityTypeConfiguration : IEntityTypeConfiguration<User>
 {
     public void Configure(EntityTypeBuilder<User> builder)
     {
+        builder.HasIndex(user => user.EmailAddress).IsUnique();
+
         builder.OwnsOne(user => user.Password, password =>
         {
             password.Property(p => p.Hash).HasColumnName("PasswordHash");
