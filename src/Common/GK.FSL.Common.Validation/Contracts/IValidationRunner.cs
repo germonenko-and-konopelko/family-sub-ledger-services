@@ -32,5 +32,5 @@ public interface IValidationRunner<TModel>
     /// <exception cref="ValidationError">
     ///     This exception is thrown when the model is invalid.
     /// </exception>
-    public Task EnsureModelIsValidAsync(TModel model, string? message = "Validation error occurred.");
+    public Task EnsureModelIsValidAsync(TModel model, string? message = null);
 }

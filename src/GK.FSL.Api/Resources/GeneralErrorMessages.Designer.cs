@@ -60,6 +60,24 @@ namespace GK.FSL.Api.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unknown server error occurred..
+        /// </summary>
+        public static string UnknownServerError {
+            get {
+                return ResourceManager.GetString("UnknownServerError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to We&apos;ve encountered an error that we were not able to handle. If the error persists, please contact the support..
+        /// </summary>
+        public static string UnknownServerErrorDetails {
+            get {
+                return ResourceManager.GetString("UnknownServerErrorDetails", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to One or more validation errors occurred..
         /// </summary>
         public static string ValidationError {

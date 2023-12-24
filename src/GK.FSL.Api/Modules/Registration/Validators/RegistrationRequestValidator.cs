@@ -1,7 +1,6 @@
 ﻿using FastEndpoints;
 using FluentValidation;
 using GK.FSL.Api.Modules.Registration.Models;
-using GK.FSL.Api.Resources;
 using Microsoft.Extensions.Localization;
 
 using ErrorMessages = GK.FSL.Api.Resources.ModelValidationErrorMessages;
@@ -50,6 +49,6 @@ public class RegistrationRequestValidator : Validator<RegistrationRequest>
 
         RuleFor(req => req.Password)
             .MaximumLength(200)
-            .WithMessage(errorMessages[nameof(ModelValidationErrorMessages.PasswordMaxLength)]);
+            .WithMessage(errorMessages[nameof(ErrorMessages.PasswordMaxLength)]);
     }
 }

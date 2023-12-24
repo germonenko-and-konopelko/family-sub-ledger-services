@@ -24,9 +24,9 @@ public class RegistrationEndpoint(
         Description(description =>
         {
             description.WithTags("Registration");
-            description.Accepts<RegistrationRequest>();
             description.ClearDefaultProduces(200);
-            description.Produces<ApiProblem>(StatusCodes.Status400BadRequest, "application/json+problem");
+            description.Accepts<RegistrationRequest>(MediaTypes.Json);
+            description.Produces<ApiProblem>(StatusCodes.Status400BadRequest, MediaTypes.JsonProblem);
         });
         Summary(summary =>
         {

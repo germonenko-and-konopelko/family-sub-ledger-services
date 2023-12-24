@@ -30,7 +30,7 @@ public class ValidationRunner<TModel>(
         return valid;
     }
 
-    public async Task EnsureModelIsValidAsync(TModel model, string? message = "Validation error occurred.")
+    public async Task EnsureModelIsValidAsync(TModel model, string? message = null)
     {
         var errors = new List<ValidationError>();
         if (!await TryRunValidationAsync(model, errors))

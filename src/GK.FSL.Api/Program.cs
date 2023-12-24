@@ -3,6 +3,7 @@ using System.Text.Json.Serialization;
 using FastEndpoints;
 using FastEndpoints.Swagger;
 using GK.FSL.Api.Extensions;
+using GK.FSL.Api.Middleware;
 using GK.FSL.Api.Modules.Common.Models;
 using GK.FSL.Api.Resources;
 using GK.FSL.Api.Services;
@@ -11,6 +12,8 @@ using GK.FSL.Common.Cryptography;
 using GK.FSL.Common.Validation;
 using GK.FSL.Common.Validation.Contracts;
 using GK.FSL.Core;
+using GK.FSL.Core.Services;
+using GK.FSL.Core.Services.Contracts;
 using GK.FSL.Registration.Contracts;
 using GK.FSL.Registration.Models;
 using GK.FSL.Registration.Services;
@@ -24,7 +27,8 @@ var builder = WebApplication.CreateSlimBuilder(args);
 
 builder.Services.AddFeatureManagement();
 
-builder.Services.AddOptions<HashingOptions>()
+builder.Services
+    .AddOptions<HashingOptions>()
     .Bind(builder.Configuration.GetSection("Security:Hashing"))
     .ValidateDataAnnotations()
     .ValidateOnStart();
@@ -48,8 +52,6 @@ builder.Services.AddDbContext<CoreDbContext>(options =>
     options.EnableDetailedErrors(builder.Environment.IsDevelopment());
 });
 
-
-builder.Services.AddScoped<IUserRegistrationService, UserRegistrationService>();
 builder.Services.AddSingleton<IHasher, Pbkdf2Hasher>();
 builder.Services.AddSingleton<IIdEncoder, SqidsIdEncoder>();
 builder.Services.AddSingleton<SqidsEncoder<long>>(_ =>
@@ -70,11 +72,16 @@ builder.Services.AddSingleton<SqidsEncoder<long>>(_ =>
     return new SqidsEncoder<long>(options);
 });
 
+builder.Services.AddScoped<IEntityResolver, EntityResolver>();
+builder.Services.AddScoped<IUserRegistrationService, UserRegistrationService>();
 builder.Services.AddScoped(typeof(IValidationRunner<>), typeof(ValidationRunner<>));
 builder.Services.AddScoped<IAsyncValidator<RegisterUserDto>, UserEmailInUseValidator>();
 
+builder.Services.AddScoped<ExceptionHandlingMiddleware>();
+
 var app = builder.Build();
 
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseFastEndpoints(options =>
 {
     options.Endpoints.RoutePrefix = "api";

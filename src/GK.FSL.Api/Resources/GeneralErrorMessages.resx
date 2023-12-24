@@ -24,4 +24,10 @@
     <data name="ValidationErrorDetails" xml:space="preserve">
         <value>One or more errors occured while validating the request. This may be relation to the malformed data. For more details please see the 'errors' section.</value>
     </data>
+    <data name="UnknownServerError" xml:space="preserve">
+        <value>Unknown server error occurred.</value>
+    </data>
+    <data name="UnknownServerErrorDetails" xml:space="preserve">
+        <value>We've encountered an error that we were not able to handle. If the error persists, please contact the support.</value>
+    </data>
 </root>
