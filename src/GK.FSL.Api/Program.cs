@@ -1,6 +1,10 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using FastEndpoints;
+using FastEndpoints.Swagger;
+using GK.FSL.Api.Extensions;
+using GK.FSL.Api.Modules.Common.Models;
+using GK.FSL.Api.Resources;
 using GK.FSL.Api.Services;
 using GK.FSL.Api.Services.Contracts;
 using GK.FSL.Common.Cryptography;
@@ -12,16 +16,26 @@ using GK.FSL.Registration.Models;
 using GK.FSL.Registration.Services;
 using GK.FSL.Registration.Validators;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
+using Microsoft.FeatureManagement;
 using Sqids;
 
 var builder = WebApplication.CreateSlimBuilder(args);
+
+builder.Services.AddFeatureManagement();
 
 builder.Services.AddOptions<HashingOptions>()
     .Bind(builder.Configuration.GetSection("Security:Hashing"))
     .ValidateDataAnnotations()
     .ValidateOnStart();
 
+builder.Services.AddLocalization();
+builder.Services.AddRequestLocalization(_ => {});
+
 builder.Services.AddFastEndpoints();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerDocuments();
+
 builder.Services.AddDbContext<CoreDbContext>(options =>
 {
     var connectionString = builder.Configuration.GetConnectionString("Core");
@@ -63,8 +77,24 @@ var app = builder.Build();
 
 app.UseFastEndpoints(options =>
 {
-    options.Versioning.Prefix = "v";
+    options.Endpoints.RoutePrefix = "api";
+    options.Serializer.Options.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
     options.Serializer.Options.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase));
+
+    // Let's make it compatible with this spec: https://datatracker.ietf.org/doc/html/rfc7807
+    options.Errors.ResponseBuilder = (validationFailures, context, statusCode) =>
+    {
+        var errorMessages = context.RequestServices.GetRequiredService<IStringLocalizer<GeneralErrorMessages>>();
+        var errors = validationFailures.Select(e => new FieldError(e.PropertyName, e.ErrorMessage));
+        return new ApiProblem(
+            statusCode,
+            errorMessages[nameof(GeneralErrorMessages.ValidationError)],
+            errorMessages[nameof(GeneralErrorMessages.ValidationErrorDetails)],
+            errors
+        );
+    };
 });
+
+app.UseSwaggerGen();
 
 app.Run();

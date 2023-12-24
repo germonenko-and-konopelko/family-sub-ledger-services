@@ -31,6 +31,7 @@ public class User : BaseModel<long>
 public enum UserStatus
 {
     None = 0,
+    Inactive = 5,
     Active = 10,
 }
 
