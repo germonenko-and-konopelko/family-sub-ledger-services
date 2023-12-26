@@ -45,4 +45,7 @@
     <data name="EmailAddressIsMalformed" xml:space="preserve">
         <value>Email address is malformed.</value>
     </data>
+    <data name="LoginIsRequired" xml:space="preserve">
+        <value>Login is required.</value>
+    </data>
 </root>

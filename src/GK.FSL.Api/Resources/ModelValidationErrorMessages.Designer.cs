@@ -123,6 +123,15 @@ namespace GK.FSL.Api.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Login is required..
+        /// </summary>
+        public static string LoginIsRequired {
+            get {
+                return ResourceManager.GetString("LoginIsRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Password is required..
         /// </summary>
         public static string PasswordIsRequired {
