@@ -2,7 +2,7 @@
 
 namespace GK.FSL.Api.Modules.Authorization.Models;
 
-public record AuthorizationResult
+public record AuthorizationResponse
 {
     [JsonPropertyName("access_token")]
     public string AccessToken { get; set; } = string.Empty;

@@ -7,9 +7,9 @@ using ErrorMessages = GK.FSL.Api.Resources.ModelValidationErrorMessages;
 
 namespace GK.FSL.Api.Modules.Authorization.Validators;
 
-public class SignInByLoginAndPasswordRequestValidator : Validator<SignInByLoginAndPasswordRequest>
+public class SignInByRequestValidator : Validator<SignInByRequest>
 {
-    public SignInByLoginAndPasswordRequestValidator(IStringLocalizer<ErrorMessages> errorMessages)
+    public SignInByRequestValidator(IStringLocalizer<ErrorMessages> errorMessages)
     {
         RuleFor(req => req.Login)
             .NotEmpty()
