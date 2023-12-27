@@ -11,7 +11,7 @@ public record AuthorizationResponse
     public string RefreshToken { get; set; } = string.Empty;
 
     [JsonPropertyName("type")]
-    public string Type { get; set; } = string.Empty;
+    public string Type { get; set; } = "Bearer";
 
     [JsonPropertyName("expires")]
     public long ExpiresTimestamp { get; set; }

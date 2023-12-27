@@ -1,5 +1,6 @@
 using System.Security.Cryptography;
 using GK.FSL.Common.Cryptography;
+using GK.FSL.Common.Cryptography.Contracts;
 using GK.FSL.Common.Validation.Contracts;
 using GK.FSL.Core;
 using GK.FSL.Core.Models;

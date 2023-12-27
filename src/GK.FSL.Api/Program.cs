@@ -6,9 +6,11 @@ using GK.FSL.Api.Extensions;
 using GK.FSL.Api.Middleware;
 using GK.FSL.Api.Modules.Common.Models;
 using GK.FSL.Api.Resources;
-using GK.FSL.Api.Services;
-using GK.FSL.Api.Services.Contracts;
+using GK.FSL.Auth.Contracts;
+using GK.FSL.Auth.Services;
 using GK.FSL.Common.Cryptography;
+using GK.FSL.Common.Cryptography.Contracts;
+using GK.FSL.Common.Cryptography.Options;
 using GK.FSL.Common.Validation;
 using GK.FSL.Common.Validation.Contracts;
 using GK.FSL.Core;
@@ -25,6 +27,7 @@ using Sqids;
 
 var builder = WebApplication.CreateSlimBuilder(args);
 
+// Options and feature management
 builder.Services.AddFeatureManagement();
 
 builder.Services
@@ -33,6 +36,24 @@ builder.Services
     .ValidateDataAnnotations()
     .ValidateOnStart();
 
+builder.Services
+    .AddOptions<SqidsOptions>()
+    .Configure(options =>
+    {
+        var alphabet = builder.Configuration.GetValue<string>("Security:Sqids:Alphabet");
+        if (!string.IsNullOrEmpty(alphabet))
+        {
+            options.Alphabet = alphabet;
+        }
+
+        var minLength = builder.Configuration.GetValue<int>("Security:Sqids:MinLength");
+        if (minLength >= 0)
+        {
+            options.MinLength = minLength;
+        }
+    });
+
+// Built-in stuff and third-party libraries
 builder.Services.AddLocalization();
 builder.Services.AddRequestLocalization(_ => {});
 
@@ -52,33 +73,25 @@ builder.Services.AddDbContext<CoreDbContext>(options =>
     options.EnableDetailedErrors(builder.Environment.IsDevelopment());
 });
 
-builder.Services.AddSingleton<IHasher, Pbkdf2Hasher>();
-builder.Services.AddSingleton<IIdEncoder, SqidsIdEncoder>();
-builder.Services.AddSingleton<SqidsEncoder<long>>(_ =>
-{
-    var options = new SqidsOptions();
-    var alphabet = builder.Configuration.GetValue<string>("Security:Sqids:Alphabet");
-    if (!string.IsNullOrEmpty(alphabet))
-    {
-        options.Alphabet = alphabet;
-    }
-
-    var minLength = builder.Configuration.GetValue<int>("Security:Sqids:MinLength");
-    if (minLength >= 0)
-    {
-        options.MinLength = minLength;
-    }
-
-    return new SqidsEncoder<long>(options);
-});
-
-builder.Services.AddScoped<IEntityResolver, EntityResolver>();
+// Sign in and registration
 builder.Services.AddScoped<IUserRegistrationService, UserRegistrationService>();
+builder.Services.AddScoped<ISignInService, SignInService>();
+
+// Core
+builder.Services.AddScoped<IEntityResolver, EntityResolver>();
+
+// Validation
 builder.Services.AddScoped(typeof(IValidationRunner<>), typeof(ValidationRunner<>));
 builder.Services.AddScoped<IAsyncValidator<RegisterUserDto>, UserEmailInUseValidator>();
 
+// Cryptography
+builder.Services.AddSingleton<IHasher, Pbkdf2Hasher>();
+builder.Services.AddSingleton(typeof(IEncoder<>), typeof(SqidsBasedEncoder<>));
+
+// Class-based middleware
 builder.Services.AddScoped<ExceptionHandlingMiddleware>();
 
+// Finally, the pipeline
 var app = builder.Build();
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();

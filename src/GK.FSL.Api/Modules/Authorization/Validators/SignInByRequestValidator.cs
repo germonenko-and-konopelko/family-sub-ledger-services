@@ -7,7 +7,7 @@ using ErrorMessages = GK.FSL.Api.Resources.ModelValidationErrorMessages;
 
 namespace GK.FSL.Api.Modules.Authorization.Validators;
 
-public class SignInByRequestValidator : Validator<SignInByRequest>
+public class SignInByRequestValidator : Validator<SignInRequest>
 {
     public SignInByRequestValidator(IStringLocalizer<ErrorMessages> errorMessages)
     {

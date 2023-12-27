@@ -1,10 +1,10 @@
 using FastEndpoints;
 using GK.FSL.Api.Modules.Users.Models;
-using GK.FSL.Api.Services.Contracts;
+using GK.FSL.Common.Cryptography.Contracts;
 
 namespace GK.FSL.Api.Modules.Users.Endpoints;
 
-public class GetUserEndpoint(IIdEncoder encoder) : EndpointWithoutRequest<UserModel>
+public class GetUserEndpoint(IEncoder<long> encoder) : EndpointWithoutRequest<UserModel>
 {
     public override void Configure()
     {

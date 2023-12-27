@@ -1,4 +1,4 @@
-﻿namespace GK.FSL.Common.Cryptography;
+﻿namespace GK.FSL.Common.Cryptography.Contracts;
 
 public interface IHasher
 {

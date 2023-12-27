@@ -1,6 +1,6 @@
 ﻿namespace GK.FSL.Api.Modules.Authorization.Models;
 
-public record SignInByRequest
+public record SignInRequest
 {
     public string Login { get; set; } = string.Empty;
 

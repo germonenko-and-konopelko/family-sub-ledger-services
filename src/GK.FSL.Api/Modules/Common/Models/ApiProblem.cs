@@ -33,6 +33,13 @@ public record ApiProblem(int Status, string Title, string Detail)
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string? TraceId { get; set; }
+
+    public static ApiProblem GetSwaggerExample(string? traceId, IEnumerable<FieldError>? errors)
+        => new(
+            400,
+            "One or more validation errors occurred.",
+            "One or more errors occured while validating the request. This may be relation to the malformed data. For more details please see the 'errors' section."
+            ) { TraceId = traceId, Errors = errors };
 }
 
 public record FieldError(string Field, string Message);
