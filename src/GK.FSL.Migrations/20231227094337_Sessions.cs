@@ -12,9 +12,12 @@ namespace GK.FSL.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.EnsureSchema(
+                name: "auth");
+
             migrationBuilder.CreateTable(
-                name: "Sessions",
-                schema: "core",
+                name: "session",
+                schema: "auth",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
@@ -29,25 +32,25 @@ namespace GK.FSL.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Sessions", x => x.Id);
+                    table.PrimaryKey("PK_session", x => x.Id);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Sessions_LastRefresh",
-                schema: "core",
-                table: "Sessions",
+                name: "IX_session_LastRefresh",
+                schema: "auth",
+                table: "session",
                 column: "LastRefresh");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Sessions_LastRefresh_IdleTimeoutOverride",
-                schema: "core",
-                table: "Sessions",
+                name: "IX_session_LastRefresh_IdleTimeoutOverride",
+                schema: "auth",
+                table: "session",
                 columns: new[] { "LastRefresh", "IdleTimeoutOverride" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Sessions_RefreshToken",
-                schema: "core",
-                table: "Sessions",
+                name: "IX_session_RefreshToken",
+                schema: "auth",
+                table: "session",
                 column: "RefreshToken",
                 unique: true);
         }
@@ -56,8 +59,8 @@ namespace GK.FSL.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Sessions",
-                schema: "core");
+                name: "session",
+                schema: "auth");
         }
     }
 }

@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace GK.FSL.Migrations
 {
     [DbContext(typeof(CoreDbContext))]
-    [Migration("20231221194229_Sessions")]
+    [Migration("20231227094337_Sessions")]
     partial class Sessions
     {
         /// <inheritdoc />
@@ -68,7 +68,7 @@ namespace GK.FSL.Migrations
 
                     b.HasIndex("LastRefresh", "IdleTimeoutOverride");
 
-                    b.ToTable("Sessions", "core");
+                    b.ToTable("session", "auth");
                 });
 
             modelBuilder.Entity("GK.FSL.Core.Models.User", b =>

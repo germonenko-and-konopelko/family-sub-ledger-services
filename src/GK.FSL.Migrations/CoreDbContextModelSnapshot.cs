@@ -65,7 +65,7 @@ namespace GK.FSL.Migrations.Migrations
 
                     b.HasIndex("LastRefresh", "IdleTimeoutOverride");
 
-                    b.ToTable("Sessions", "core");
+                    b.ToTable("session", "auth");
                 });
 
             modelBuilder.Entity("GK.FSL.Core.Models.User", b =>
