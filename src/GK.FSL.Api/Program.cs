@@ -7,6 +7,7 @@ using GK.FSL.Api.Middleware;
 using GK.FSL.Api.Modules.Common.Models;
 using GK.FSL.Api.Resources;
 using GK.FSL.Auth.Contracts;
+using GK.FSL.Auth.Options;
 using GK.FSL.Auth.Services;
 using GK.FSL.Common.Cryptography;
 using GK.FSL.Common.Cryptography.Contracts;
@@ -33,6 +34,12 @@ builder.Services.AddFeatureManagement();
 builder.Services
     .AddOptions<HashingOptions>()
     .Bind(builder.Configuration.GetSection("Security:Hashing"))
+    .ValidateDataAnnotations()
+    .ValidateOnStart();
+
+builder.Services
+    .AddOptions<AccessTokenOptions>()
+    .Bind(builder.Configuration.GetSection("Security:AccessToken"))
     .ValidateDataAnnotations()
     .ValidateOnStart();
 
@@ -72,6 +79,11 @@ builder.Services.AddDbContext<CoreDbContext>(options =>
     options.EnableSensitiveDataLogging(builder.Environment.IsDevelopment());
     options.EnableDetailedErrors(builder.Environment.IsDevelopment());
 });
+
+// Auth
+builder.Services.AddSingleton<IAccessTokenGenerator, JwtAccessTokenGenerator>();
+builder.Services.AddSingleton<IRefreshTokenGenerator, RandomRefreshTokenGenerator>();
+builder.Services.AddScoped<ISignInService, SignInService>();
 
 // Sign in and registration
 builder.Services.AddScoped<IUserRegistrationService, UserRegistrationService>();
