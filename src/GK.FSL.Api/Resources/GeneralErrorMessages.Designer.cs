@@ -60,6 +60,24 @@ namespace GK.FSL.Api.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Refresh token was not provided..
+        /// </summary>
+        public static string RefreshTokenIsNotProvided {
+            get {
+                return ResourceManager.GetString("RefreshTokenIsNotProvided", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Refresh token was not provided. It can be provided via the cookies using &apos;{0}&apos; cookie entry..
+        /// </summary>
+        public static string RefreshTokenIsNotProvidedDetails {
+            get {
+                return ResourceManager.GetString("RefreshTokenIsNotProvidedDetails", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Unknown server error occurred..
         /// </summary>
         public static string UnknownServerError {

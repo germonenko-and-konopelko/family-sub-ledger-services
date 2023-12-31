@@ -34,7 +34,7 @@ public record ApiProblem(int Status, string Title, string Detail)
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string? TraceId { get; set; }
 
-    public static ApiProblem GetSwaggerExample(string? traceId, IEnumerable<FieldError>? errors)
+    public static ApiProblem GetSwaggerExample(string? traceId = null, IEnumerable<FieldError>? errors = null)
         => new(
             400,
             "One or more validation errors occurred.",

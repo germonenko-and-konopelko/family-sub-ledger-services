@@ -5,6 +5,8 @@ namespace GK.FSL.Core.Models;
 
 public class Session : BaseModel<long>
 {
+    public long? UserId { get; set; }
+
     [Required, StringLength(200)]
     public string RefreshToken { get; set; } = string.Empty;
 

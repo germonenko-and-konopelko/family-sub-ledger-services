@@ -6,5 +6,12 @@ public record SignInRequest
 
     public string Password { get; set; } = string.Empty;
 
-    public string? DeviceName { get; set; }
+    public string? Device { get; set; }
+
+    public static SignInRequest GetSwaggerExample() => new()
+    {
+        Login = "emilia.müller@gmail.com",
+        Password = "1234",
+        Device = "swagger",
+    };
 }

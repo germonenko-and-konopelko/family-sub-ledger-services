@@ -1,5 +1,6 @@
 ﻿using GK.FSL.Api.Constants;
 using GK.FSL.Api.Modules.Common.Models;
+using GK.FSL.Core.Exceptions;
 using Microsoft.AspNetCore.Http.Json;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
@@ -21,7 +22,17 @@ public class ExceptionHandlingMiddleware(
         {
             await next(context);
         }
-        catch (ValidationException e)
+        catch (CoreException e)
+        {
+            var response = new ApiProblem(
+                StatusCodes.Status422UnprocessableEntity,
+                e.Message,
+                e.Description ?? errorMessages[nameof(ErrorMessages.ValidationErrorDetails)]
+            );
+
+            await SendResponseAsync(response, context);
+        }
+        catch(ValidationException e)
         {
             var errorTitle = errorMessages[nameof(ErrorMessages.ValidationError)];
             var errorDetail = errorMessages[nameof(ErrorMessages.ValidationErrorDetails)];

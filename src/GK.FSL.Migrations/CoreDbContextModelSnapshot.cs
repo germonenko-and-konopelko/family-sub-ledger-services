@@ -8,7 +8,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace GK.FSL.Migrations.Migrations
+namespace GK.FSL.Migrations
 {
     [DbContext(typeof(CoreDbContext))]
     partial class CoreDbContextModelSnapshot : ModelSnapshot
@@ -27,85 +27,121 @@ namespace GK.FSL.Migrations.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("bigint")
+                        .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
                     b.Property<string>("ClientName")
                         .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("client_name");
 
                     b.Property<DateTimeOffset>("Created")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created");
 
                     b.Property<TimeSpan?>("IdleTimeoutOverride")
-                        .HasColumnType("interval");
+                        .HasColumnType("interval")
+                        .HasColumnName("idle_timeout_override");
 
                     b.Property<string>("IpAddress")
                         .HasMaxLength(60)
-                        .HasColumnType("character varying(60)");
+                        .HasColumnType("character varying(60)")
+                        .HasColumnName("ip_address");
 
                     b.Property<DateTimeOffset>("LastRefresh")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("last_refresh");
 
                     b.Property<string>("RefreshToken")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("refresh_token");
 
                     b.Property<DateTimeOffset>("Updated")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated");
 
-                    b.HasKey("Id");
+                    b.Property<long?>("UserId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("user_id");
 
-                    b.HasIndex("LastRefresh");
+                    b.HasKey("Id")
+                        .HasName("pk_sessions");
+
+                    b.HasIndex("LastRefresh")
+                        .HasDatabaseName("ix_sessions_last_refresh");
 
                     b.HasIndex("RefreshToken")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasDatabaseName("ix_sessions_refresh_token");
 
-                    b.HasIndex("LastRefresh", "IdleTimeoutOverride");
+                    b.HasIndex("UserId")
+                        .HasDatabaseName("ix_sessions_user_id");
 
-                    b.ToTable("session", "auth");
+                    b.HasIndex("LastRefresh", "IdleTimeoutOverride")
+                        .HasDatabaseName("ix_sessions_last_refresh_idle_timeout_override");
+
+                    b.ToTable("sessions", "auth");
                 });
 
             modelBuilder.Entity("GK.FSL.Core.Models.User", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("bigint")
+                        .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
                     b.Property<DateTimeOffset>("Created")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created");
 
                     b.Property<string>("EmailAddress")
                         .IsRequired()
                         .HasMaxLength(250)
-                        .HasColumnType("character varying(250)");
+                        .HasColumnType("character varying(250)")
+                        .HasColumnName("email_address");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("first_name");
 
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("last_name");
 
                     b.Property<int>("Status")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("status");
 
                     b.Property<DateTimeOffset>("Updated")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_users");
 
                     b.HasIndex("EmailAddress")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasDatabaseName("ix_users_email_address");
 
-                    b.ToTable("Users", "core");
+                    b.ToTable("users", "core");
+                });
+
+            modelBuilder.Entity("GK.FSL.Core.Models.Session", b =>
+                {
+                    b.HasOne("GK.FSL.Core.Models.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .HasConstraintName("fk_sessions_users_user_id");
                 });
 
             modelBuilder.Entity("GK.FSL.Core.Models.User", b =>
@@ -113,7 +149,8 @@ namespace GK.FSL.Migrations.Migrations
                     b.OwnsOne("GK.FSL.Core.Models.Password", "Password", b1 =>
                         {
                             b1.Property<long>("UserId")
-                                .HasColumnType("bigint");
+                                .HasColumnType("bigint")
+                                .HasColumnName("id");
 
                             b1.Property<byte[]>("Hash")
                                 .IsRequired()
@@ -129,10 +166,11 @@ namespace GK.FSL.Migrations.Migrations
 
                             b1.HasKey("UserId");
 
-                            b1.ToTable("Users", "core");
+                            b1.ToTable("users", "core");
 
                             b1.WithOwner()
-                                .HasForeignKey("UserId");
+                                .HasForeignKey("UserId")
+                                .HasConstraintName("fk_users_users_id");
                         });
 
                     b.Navigation("Password");

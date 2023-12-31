@@ -4,7 +4,7 @@ name: fsl
 
 services:
   postgres:
-    image: postgres:15
+    image: postgres:16
     container_name: postgres
     ports:
       - '5432:5432'

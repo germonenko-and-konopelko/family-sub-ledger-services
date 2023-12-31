@@ -16,7 +16,7 @@ public class User : BaseModel<long>
 
     public UserStatus Status { get; set; }
 
-    internal Password? Password { get; set; }
+    public Password? Password { get; set; }
 
     public void SetPassword(byte[] hash, byte[] salt)
     {
@@ -35,7 +35,7 @@ public enum UserStatus
     Active = 10,
 }
 
-internal class Password
+public class Password
 {
     [MaxLength(400)]
     public byte[] Hash { get; set; } = Array.Empty<byte>();

@@ -2,11 +2,13 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using FastEndpoints;
 using FastEndpoints.Swagger;
+using GK.FSL.Api.Constants;
 using GK.FSL.Api.Extensions;
 using GK.FSL.Api.Middleware;
 using GK.FSL.Api.Modules.Common.Models;
 using GK.FSL.Api.Resources;
 using GK.FSL.Auth.Contracts;
+using GK.FSL.Auth.Jobs;
 using GK.FSL.Auth.Options;
 using GK.FSL.Auth.Services;
 using GK.FSL.Common.Cryptography;
@@ -24,7 +26,10 @@ using GK.FSL.Registration.Validators;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 using Microsoft.FeatureManagement;
+using Microsoft.IdentityModel.JsonWebTokens;
+using Microsoft.IdentityModel.Tokens;
 using Sqids;
+using SessionOptions = GK.FSL.Auth.Options.SessionOptions;
 
 var builder = WebApplication.CreateSlimBuilder(args);
 
@@ -40,6 +45,17 @@ builder.Services
 builder.Services
     .AddOptions<AccessTokenOptions>()
     .Bind(builder.Configuration.GetSection("Security:AccessToken"))
+    .ValidateDataAnnotations()
+    .ValidateOnStart();
+
+builder.Services
+    .AddOptions<SessionOptions>()
+    .Bind(builder.Configuration.GetSection("Session"))
+    .ValidateOnStart();
+
+builder.Services
+    .AddOptions<CookieOptions>()
+    .Bind(builder.Configuration.GetSection("Cookies"))
     .ValidateDataAnnotations()
     .ValidateOnStart();
 
@@ -64,6 +80,20 @@ builder.Services
 builder.Services.AddLocalization();
 builder.Services.AddRequestLocalization(_ => {});
 
+builder.Services
+    .AddAuthentication()
+    .AddJwtBearer(options =>
+    {
+        var signingKey = builder.Configuration.GetValue<byte[]>("Security:AccessToken:SigningKey");
+        options.TokenValidationParameters.IssuerSigningKey = new SymmetricSecurityKey(signingKey);
+        options.MapInboundClaims = false;
+    });
+
+builder.Services
+    .AddAuthorizationBuilder()
+    .AddDefaultPolicy(PolicyNames.RequireUser, policy => policy.RequireClaim(JwtRegisteredClaimNames.Sub))
+    .SetInvokeHandlersAfterFailure(false);
+
 builder.Services.AddFastEndpoints();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerDocuments();
@@ -78,12 +108,18 @@ builder.Services.AddDbContext<CoreDbContext>(options =>
     });
     options.EnableSensitiveDataLogging(builder.Environment.IsDevelopment());
     options.EnableDetailedErrors(builder.Environment.IsDevelopment());
+    options.UseSnakeCaseNamingConvention();
 });
+
+// Hosted services
+builder.Services.AddHostedService<StaleSessionCleanupJob>();
 
 // Auth
 builder.Services.AddSingleton<IAccessTokenGenerator, JwtAccessTokenGenerator>();
 builder.Services.AddSingleton<IRefreshTokenGenerator, RandomRefreshTokenGenerator>();
 builder.Services.AddScoped<ISignInService, SignInService>();
+builder.Services.AddScoped<IStaleSessionCleanupService, StaleSessionCleanupService>();
+builder.Services.AddScoped<ISessionRefreshService, SessionRefreshService>();
 
 // Sign in and registration
 builder.Services.AddScoped<IUserRegistrationService, UserRegistrationService>();

@@ -13,7 +13,7 @@ public class JwtAccessTokenGenerator(IOptions<AccessTokenOptions> options) : IAc
 {
     private readonly JwtSecurityTokenHandler _jwtSecurityTokenHandler = new();
 
-    public string GetToken(AccessTokenPayload tokenPayload)
+    public Token GetToken(AccessTokenPayload tokenPayload)
     {
         var securityKey = new SymmetricSecurityKey(options.Value.SigningKey);
         var signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
@@ -47,16 +47,17 @@ public class JwtAccessTokenGenerator(IOptions<AccessTokenOptions> options) : IAc
         }
 
         var issuedAt = DateTime.UtcNow;
+        var expires = issuedAt.Add(options.Value.LifetimeSpan);
         var jwtPayload = new JwtPayload(
             issuer:  options.Value.Issuer,
             audience: options.Value.Audience,
             claims: claims,
             notBefore: null,
-            expires: issuedAt.Add(options.Value.LifetimeSpan),
+            expires: expires,
             issuedAt: issuedAt
         );
 
         var jwtToken = new JwtSecurityToken(jwtHeader, jwtPayload);
-        return _jwtSecurityTokenHandler.WriteToken(jwtToken);
+        return new(_jwtSecurityTokenHandler.WriteToken(jwtToken), expires);
     }
 }
