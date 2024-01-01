@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace GK.FSL.Migrations
 {
     [DbContext(typeof(CoreDbContext))]
-    [Migration("20231219192633_Users")]
+    [Migration("20231231014418_Users")]
     partial class Users
     {
         /// <inheritdoc />
@@ -28,37 +28,49 @@ namespace GK.FSL.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("bigint")
+                        .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
                     b.Property<DateTimeOffset>("Created")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created");
 
                     b.Property<string>("EmailAddress")
                         .IsRequired()
                         .HasMaxLength(250)
-                        .HasColumnType("character varying(250)");
+                        .HasColumnType("character varying(250)")
+                        .HasColumnName("email_address");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("first_name");
 
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("last_name");
 
                     b.Property<int>("Status")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("status");
 
                     b.Property<DateTimeOffset>("Updated")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated");
 
-                    b.HasKey("Id");
+                    b.HasKey("Id")
+                        .HasName("pk_users");
 
-                    b.ToTable("Users", "core");
+                    b.HasIndex("EmailAddress")
+                        .IsUnique()
+                        .HasDatabaseName("ix_users_email_address");
+
+                    b.ToTable("users", "core");
                 });
 
             modelBuilder.Entity("GK.FSL.Core.Models.User", b =>
@@ -66,7 +78,8 @@ namespace GK.FSL.Migrations
                     b.OwnsOne("GK.FSL.Core.Models.Password", "Password", b1 =>
                         {
                             b1.Property<long>("UserId")
-                                .HasColumnType("bigint");
+                                .HasColumnType("bigint")
+                                .HasColumnName("id");
 
                             b1.Property<byte[]>("Hash")
                                 .IsRequired()
@@ -82,10 +95,11 @@ namespace GK.FSL.Migrations
 
                             b1.HasKey("UserId");
 
-                            b1.ToTable("Users", "core");
+                            b1.ToTable("users", "core");
 
                             b1.WithOwner()
-                                .HasForeignKey("UserId");
+                                .HasForeignKey("UserId")
+                                .HasConstraintName("fk_users_users_id");
                         });
 
                     b.Navigation("Password");

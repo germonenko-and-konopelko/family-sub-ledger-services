@@ -18,18 +18,48 @@
     </ItemGroup>
 
     <ItemGroup>
+      <PackageReference Include="EFCore.NamingConventions" Version="8.0.0-rc.2" />
       <PackageReference Include="FastEndpoints" Version="5.20.1" />
       <PackageReference Include="FastEndpoints.Swagger" Version="5.20.1" />
+      <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.0" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.0">
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
+      <PackageReference Include="Microsoft.FeatureManagement.AspNetCore" Version="3.1.1" />
       <PackageReference Include="Sqids" Version="3.1.0" />
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Common\GK.FSL.Common.Validation\GK.FSL.Common.Validation.csproj" />
+      <ProjectReference Include="..\GK.FSL.Auth\GK.FSL.Auth.csproj" />
       <ProjectReference Include="..\GK.FSL.Core\GK.FSL.Core.csproj" />
       <ProjectReference Include="..\GK.FSL.Migrations\GK.FSL.Migrations.csproj" />
+      <ProjectReference Include="..\GK.FSL.Registration\GK.FSL.Registration.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Update="Resources\ModelValidationErrorMessages.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>ModelValidationErrorMessages.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\GeneralErrorMessages.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>GeneralErrorMessages.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Resources\ModelValidationErrorMessages.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>ModelValidationErrorMessages.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Resources\GeneralErrorMessages.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>GeneralErrorMessages.resx</DependentUpon>
+      </Compile>
     </ItemGroup>
 
 </Project>

@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<root>
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xsd:element name="root" msdata:IsDataSet="true">
+            
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <data name="FirstNameIsRequired" xml:space="preserve">
+        <value>First name is required.</value>
+    </data>
+    <data name="LastNameIsRequired" xml:space="preserve">
+        <value>Last name is required.</value>
+    </data>
+    <data name="EmailAddressIsRequired" xml:space="preserve">
+        <value>Email address is required.</value>
+    </data>
+    <data name="PasswordIsRequired" xml:space="preserve">
+        <value>Password is required.</value>
+    </data>
+    <data name="FirstNameMaxLength" xml:space="preserve">
+        <value>First name has max length of 50 symbols.</value>
+    </data>
+    <data name="LastNameMaxLength" xml:space="preserve">
+        <value>Last name max has length of 50 symbols.</value>
+    </data>
+    <data name="EmailAddressMaxLength" xml:space="preserve">
+        <value>Email address has max length of 250 symbols.</value>
+    </data>
+    <data name="PasswordMaxLength" xml:space="preserve">
+        <value>Password has max lengths of 200 symbols.</value>
+    </data>
+    <data name="EmailAddressIsMalformed" xml:space="preserve">
+        <value>Email address is malformed.</value>
+    </data>
+    <data name="LoginIsRequired" xml:space="preserve">
+        <value>Login is required.</value>
+    </data>
+</root>
